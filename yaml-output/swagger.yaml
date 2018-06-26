@@ -77,9 +77,18 @@ paths:
         '200': 
           description: Successful operation
           schema: 
-            type: array
-            items:
-              $ref: '#/definitions/SiteDiagnosis'
+            type: object
+            properties:
+              main_status:
+                type: string
+                enum:
+                  - ok
+                  - device-offline
+                  - device-warning
+              devices_status:
+                type: array
+                items:
+                  $ref: '#/definitions/SiteDiagnosis'
               
 definitions:
   SiteDiagnosis:
@@ -319,7 +328,6 @@ definitions:
         description: The device MAC address.
         type: string
       device_definition:
-        description: The device definition.
         $ref: '#/definitions/DeviceDefinition'
 #      status:
 #        description: The device status.
@@ -514,6 +522,7 @@ definitions:
         description: Is Tag cover present (Tag).
         type: boolean
   DeviceDefinition:
+    description: The device definition.
     required:
       - id
       - label
