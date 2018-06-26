@@ -1,0 +1,547 @@
+swagger: '2.0'
+info:
+  version: '1.0'
+  title: "testapiv4"
+  description: API Somfy Protect V4. Redefining User / Site / Devices services for the win
+  license:
+    name: MIT
+    url: https://github.com/apiaryio/polls-api/blob/master/LICENSE
+host: polls.apiblueprint.org
+basePath: /v4/
+schemes:
+- https
+consumes:
+- application/json
+produces: 
+- application/json
+paths:
+  '/user/{user_id}' :
+    get: 
+      summary: Get user informations
+      parameters: 
+        - name: user_id
+          in: path
+          description: User identitfier, current user if not provided
+          required: true
+          type: string
+      responses: 
+        '200': 
+          description: Successful operation
+          schema: 
+            items:
+              $ref: '#/definitions/UserInfo'
+            
+  '/user/{user_id}/site' :
+    get: 
+      summary: Get a user list of sites summaries
+      parameters: 
+        - name: user_id
+          in: path
+          description: User identitfier.
+          required: true
+          type: string
+      responses: 
+        '200': 
+          description: Successful operation
+          schema: 
+            type: array
+            items:
+              $ref: '#/definitions/SiteSummary'
+  '/site/{site_id}/device':
+    get: 
+      summary: Get a site list of devices
+      parameters: 
+        - name: site_id
+          in: path
+          description: Site identitfier.
+          required: true
+          type: string
+      responses: 
+        '200': 
+          description: Successful operation
+          schema: 
+            type: array
+            items:
+              $ref: '#/definitions/DeviceSummary'
+              
+  '/site/{site_id}/diagnostic':
+    get: 
+      summary: Get a site list of diagnostics
+      parameters: 
+        - name: site_id
+          in: path
+          description: Site identitfier.
+          required: true
+          type: string
+      responses: 
+        '200': 
+          description: Successful operation
+          schema: 
+            type: array
+            items:
+              $ref: '#/definitions/SiteDiagnosis'
+              
+definitions:
+  SiteDiagnosis:
+    properties:
+      main_status:
+        type: string
+        enum:
+          - ok
+          - device-offline
+          - device-warning
+      main_message:
+        type: string
+      main_message_vars:
+        type: array
+        items:
+          type: string
+      device_diagnosis_available:
+        type: boolean
+      device_diagnosis_expired:
+        type: boolean
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/SiteDiagnosisItem'
+  SiteDiagnosisItem:
+    properties:
+      problem:
+        type: string
+  UserInfo:
+    properties:
+      alexaSelectedSiteId:
+        type: string
+      user_id:
+        description: User identifier.
+        type: string
+      created_at:
+        description: User creation date.
+        type: string
+        format: date-time
+      activated:
+        description: Is user account activated?
+        type: boolean
+      type_user:
+        description: Type of user.
+        type: string
+        enum:
+          - account
+          - guest
+      photo_id:
+        description: Identifier of user photo.
+        type: string
+      display_name:
+        description: Name to display for this user.
+        type: string
+        example: Ernest W.
+      origin:
+        description: User origin.
+        type: string
+      pro_details:
+        description: User pro details.
+        type: string
+      firstname:
+        description: User firstname.
+        type: string
+        example: Ernest
+      lastname:
+        description: User lastname.
+        type: string
+        example: Wallon
+      username:
+        description: User email.
+        type: string
+        example: ernest.wallon@getmyfox.com
+      gender:
+        description: User gender.
+        type: string
+        enum:
+          - F
+          - M
+      locale:
+        description: User locale.
+        type: string
+        example: en_US
+      phone:
+        description: User phone number.
+        type: string
+        example: '+33692693115'
+  SiteSummary:
+    required:
+      - site_id
+      - security_level
+      - invitation
+      - diagnosis_status
+      - alarm
+      - restoration_active
+      - privacy_active
+      - read_only
+    properties:
+      site_id:
+        description: Site identifier.
+        type: string
+      security_level:
+        description: Site security level.
+        type: string
+        enum:
+          - disarmed
+          - partial
+          - armed
+      brand:
+        description: Brand.
+#      restoration_active:
+#        description: Is a Plug configuration currently being backed up?
+#        type: boolean
+      privacy_active:
+        description: Privacy current status.
+        type: boolean
+      read_only:
+        description: Read only status.
+        type: boolean
+      hcs_site_id:
+        description: HCS site identifier.
+        type: string
+      origin:
+        description: Site origin.
+        type: string
+      axa_it_phone_number:
+        description: Axa IT phone number.
+        type: string
+      axa_it_phone_number_displayed:
+        description: Axa IT phone number formatted.
+        type: string
+      features:
+        description: Features enabled.
+        type: array
+        items:
+          type: string
+      label:
+        description: Site label.
+        type: string
+        example: Ernest Home
+      timezone:
+        description: Timezone of the site location.
+        type: string
+        example: Europe/Paris
+      name:
+        description: Name of the site location.
+        type: string
+        example: John Doe
+      address1:
+        description: Address of the site location.
+        type: string
+        example: 114 Rue des Troenes
+      address2:
+        description: Address complement of the site location.
+        type: string
+        example: Centrale
+      zip_code:
+        description: Post code of the site location.
+        type: string
+        example: '31200'
+      city:
+        description: City of the site location.
+        type: string
+        example: Toulouse
+      region:
+        description: Region/State of the site location.
+        type: string
+        example: Haute-Garonne
+      country:
+        description: Country code of the site location (uppercase two-letter ISO-3166-1 alpha-2 code).
+        type: string
+        example: FR
+      crosstreet:
+        description: Cross street details.
+        type: string
+      complement:
+        description: Address complement.
+        type: string
+      latitude:
+        description: Address latitude.
+        type: string
+      longitude:
+        description: Address longitude.
+        type: string
+      police_phone_number:
+        description: Police phone number of the site area.
+        type: string
+        example: '17'
+      kids_enabled:
+        description: Enable KIDS feature.
+        type: boolean
+      display_kid_presence:
+        description: Display presence for Kids.
+        type: boolean
+      display_guest_presence:
+        description: Display presence for guests.
+        type: boolean
+      shutter_automatic_enabled:
+        description: Enable automatic shutter (for cameras).
+        type: boolean
+      presence_enabled:
+        description: Enable user presence display.
+        type: boolean
+      smoke_alarm_listening_enabled:
+        description: Enable smoke alarm detection.
+        type: boolean
+      mfa_enabled:
+        description: Enable Myfox Around.
+        type: boolean
+      mfa_available:
+        description: Myfox Around  Feature.
+        type: boolean
+      installer_id:
+        description: Installer Id.
+        type: string
+        
+  DeviceSummary:
+    required:
+      - device_id
+      - site_id
+      - device_definition
+      - status
+    properties:
+      device_id:
+        description: The device unique identifier.
+        type: string
+      box_id:
+        description: The device box identifier.
+        type: string
+      site_id:
+        description: The device site identifier.
+        type: string
+      version:
+        description: The device firmware version.
+        type: string
+      mac:
+        description: The device MAC address.
+        type: string
+      device_definition:
+        description: The device definition.
+        $ref: '#/definitions/DeviceDefinition'
+#      status:
+#        description: The device status.
+#        $ref: '#/definitions/DeviceStatus'
+      into_subscription:
+        description: Device is into a subscription (uninstall will be forbidden).
+        type: boolean
+      push_to_talk_available:
+        description: Camera has push to talk available.
+        type: boolean
+      provider_id:
+        description: Provider ID.
+        type: string
+      update_available:
+        type: boolean
+      master:
+        description: Is it master device.
+        type: boolean
+      somfy_one_type:
+        description: Somfy One Type.
+        type: string
+        enum:
+          - somfy_one
+          - somfy_one_plus
+      video_backend:
+        description: Video Backend.
+        type: string
+      label:
+        description: The device label.
+        type: string
+#      settings:
+#        description: Settings
+#        $ref: '#/definitions/DeviceSettings'
+  DeviceStatus:
+    properties:
+      last_status_at:
+        description: 'Last status date (AIO, AIO+, Box, Extender, OutdoorSiren, Pir, Remote, Siren, Tag).'
+        type: string
+        format: date-time
+      rlink_quality:
+        description: 'rLink Quality (AIO, AIO+, Camera, Extender, OutdoorSiren, Pir, Remote, Siren, Tag).'
+        type: integer
+      rlink_quality_percent:
+        description: 'rLink Quality Percent (AIO, AIO+, Camera, Extender, OutdoorSiren, Pir, Siren, Tag).'
+        type: integer
+      battery_level:
+        description: 'Level of battery (AIO+, Box, OutdoorSiren, Pir, Remote, Siren, Tag).'
+        type: integer
+      device_lost:
+        description: 'Is device lost ? (Extender, OutdoorSiren, Pir, Remote, Siren, Tag).'
+        type: boolean
+      power_mode:
+        description: 'Power mode (AIO, AIO+, Box, Camera, Extender).'
+        type: string
+        default: 'null'
+        enum:
+          - battery
+          - current
+      last_online_at:
+        description: 'Time of last online (AIO, AIO+, Box, Camera).'
+        type: string
+        format: date-time
+      last_offline_at:
+        description: 'Time of last offline (AIO, AIO+, Box, Camera).'
+        type: string
+        format: date-time
+      wifi_level:
+        description: 'Level of wifi signal (AIO, AIO+, Box, Camera).'
+        type: integer
+      wifi_level_percent:
+        description: 'Wifi Level Percent (AIO, AIO+, Box, Camera).'
+        type: integer
+      power_state:
+        description: 'Power state (AIO, AIO+, Box).'
+        type: integer
+      mfa_quality_percent:
+        description: 'mfa Quality Percent (AIO, AIO+, Box).'
+        type: integer
+      mfa_last_test_at:
+        description: 'Last myfox around test (AIO, AIO+, Box).'
+        type: string
+        format: date-time
+      mfa_last_test_success_at:
+        description: 'Last myfox around test success (AIO, AIO+, Box).'
+        type: string
+        format: date-time
+      mfa_last_online_at:
+        description: 'Last MFA online status (AIO, AIO+, Box).'
+        type: string
+        format: date-time
+      mfa_last_offline_at:
+        description: 'Last MFA ofline status (AIO, AIO+, Box).'
+        type: string
+        format: date-time
+      mfa_last_connected_at:
+        description: 'Last MFA connected status (AIO, AIO+, Box).'
+        type: string
+        format: date-time
+      mfa_last_disconnected_at:
+        description: 'Last MFA disconnected status (AIO, AIO+, Box).'
+        type: string
+        format: date-time
+      shutter_state:
+        description: 'Shutter state (AIO, AIO+, Camera).'
+        type: string
+        enum:
+          - opened
+          - closed
+      last_shutter_opened_at:
+        description: 'Last shutter opened (AIO, AIO+, Camera).'
+        type: string
+        format: date-time
+      last_shutter_closed_at:
+        description: 'Last shutter closed (AIO, AIO+, Camera).'
+        type: string
+        format: date-time
+      rlink_state:
+        description: 'rLink state (Remote, Siren, Tag).'
+        type: integer
+      lora_quality_percent:
+        description: 'Lorawan Quality Percent (AIO+, Box).'
+        type: integer
+      lora_last_test_at:
+        description: 'Last LoraWan test (AIO+, Box).'
+        type: string
+        format: date-time
+      lora_last_test_success_at:
+        description: 'Last LoraWan success test (AIO+, Box).'
+        type: string
+        format: date-time
+      lora_last_online_at:
+        description: 'Last LoraWan online status (AIO+, Box).'
+        type: string
+        format: date-time
+      lora_last_offline_at:
+        description: 'Last LoraWan offline status (AIO+, Box).'
+        type: string
+        format: date-time
+      lora_last_connected_at:
+        description: 'Last LoraWan connected status (AIO+, Box).'
+        type: string
+        format: date-time
+      lora_last_disconnected_at:
+        description: 'Last LoraWan disconnected status (AIO+, Box).'
+        type: string
+        format: date-time
+      temperature:
+        description: 'Temperature (Pir, OutdoorSiren).'
+        type: number
+        format: float
+      temperatureAt:
+        description: 'Time of last temperature (OutdoorSiren, Pir).'
+        type: string
+        format: date-time
+      fsk_level:
+        description: FSK Level (Box).
+        type: integer
+      ble_level:
+        description: BLE Level (Box).
+        type: integer
+      battery_status:
+        description: Battery status (Extender).
+        type: integer
+      mounted_at:
+        description: Time of outdoor siren installation (OutdoorSiren).
+        type: string
+        format: date-time
+      battery_low:
+        description: Is battery low (Pir).
+        type: boolean
+      battery_level_state:
+        description: Remote battery level state (Remote).
+        type: integer
+      keep_alive:
+        description: Remote keep alive (Remote).
+        type: integer
+      last_check_in_state:
+        description: Last check in from remote (Remote).
+        type: string
+        format: date-time
+      last_check_out_state:
+        description: Last check out from remote (Remote).
+        type: string
+        format: date-time
+      recalibration_required:
+        description: Is Tag recalibration required (Tag).
+        type: boolean
+      recalibrateable:
+        description: Is Tag can be recalibrate (Tag).
+        type: boolean
+      cover_present:
+        description: Is Tag cover present (Tag).
+        type: boolean
+  DeviceDefinition:
+    required:
+      - id
+      - label
+      - type
+    properties:
+      device_definition_id:
+        description: The device definition unique identifier
+        type: string
+        enum:
+          - mss_camera
+          - mss_plug
+          - mss_remote
+          - mss_siren
+          - mss_outdoor_siren
+          - mss_tag
+          - mss_camera_myfox_1
+          - mss_aio_1_plus
+          - mss_aio_1
+          - sp_indoor_cam1
+      label:
+        description: The device label
+        type: string
+      type:
+        description: The device type
+        type: string
+        enum:
+          - box
+          - camera
+          - remote
+          - siren
+          - tag
