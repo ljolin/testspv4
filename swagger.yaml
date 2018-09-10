@@ -17,14 +17,14 @@ produces:
 paths:
   '/user' :
     get: 
-      summary: Get current user informations
+      summary: Get current user informations - Retrieve for previous api
       
       responses: 
         '200': 
           description: Successful operation
           schema: 
             items:
-              $ref: '#/definitions/UserInfo'
+              $ref: '#/definitions/UserOutputForSite'
             
   '/site' :
     get: 
@@ -36,6 +36,12 @@ paths:
             type: array
             items:
               $ref: '#/definitions/SiteSummary'
+  '/site/presence' :
+     get:
+       summary: Get list of precaculated user presence, mightbe aggressively cached
+       
+       
+       
   '/site/{site_id}/device':
     get: 
       summary: Get a site list of devices
@@ -54,7 +60,20 @@ paths:
               $ref: '#/definitions/DeviceSummary'
   '/site/{site_id}/user':
     get:
-    # des trucs
+      summary: Get the list of site user
+      parameters: 
+        - name: site_id
+          in: path
+          description: Site identitfier.
+          required: true
+          type: string
+      responses: 
+        '200': 
+          description: Successful operation
+          schema: 
+            type: array
+            items:
+              $ref: '#/definitions/SiteDiagnosis'
   '/site/{site_id}/diagnostic':
     get: 
       summary: Get a site list of diagnostics
