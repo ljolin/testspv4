@@ -15,15 +15,10 @@ consumes:
 produces: 
 - application/json
 paths:
-  '/user/{user_id}' :
+  '/user' :
     get: 
-      summary: Get user informations
-      parameters: 
-        - name: user_id
-          in: path
-          description: User identitfier, current user if not provided
-          required: true
-          type: string
+      summary: Get current user informations
+      
       responses: 
         '200': 
           description: Successful operation
@@ -31,15 +26,9 @@ paths:
             items:
               $ref: '#/definitions/UserInfo'
             
-  '/user/{user_id}/site' :
+  '/site' :
     get: 
-      summary: Get a user list of sites summaries
-      parameters: 
-        - name: user_id
-          in: path
-          description: User identitfier.
-          required: true
-          type: string
+      summary: Get  list of sites summaries for the current user
       responses: 
         '200': 
           description: Successful operation
@@ -63,7 +52,9 @@ paths:
             type: array
             items:
               $ref: '#/definitions/DeviceSummary'
-              
+  '/site/{site_id}/user':
+    get:
+    # des trucs
   '/site/{site_id}/diagnostic':
     get: 
       summary: Get a site list of diagnostics
